@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is a repository of code to generate data, visualize results, and build a genome browser related to our article
 
-Wang, C., and Zhang, S. (2017). [Large-scale determination and characterization of cell type-specific regulatory elements in the human genome.](https://academic.oup.com/jmcb/article/9/6/463/4769428) Journal of molecular cell biology 9, 463-476.
+> Wang, C., and Zhang, S. (2017). [Large-scale determination and characterization of cell type-specific regulatory elements in the human genome.](https://academic.oup.com/jmcb/article/9/6/463/4769428) Journal of molecular cell biology 9, 463-476.
 
 And this is the [website](http://zhanglabtools.org:2017/) of our article.
 
