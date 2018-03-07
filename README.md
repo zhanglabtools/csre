@@ -23,11 +23,11 @@ You can build a genome browser based on the scripts in `R/browser`. This is [the
 Requirements
 ------------
 
-R &gt;= 3.4.1
+`R` &gt;= 3.4.1
 
-Bioconductor &gt;= 3.5
+`Bioconductor` &gt;= 3.5
 
-You need to install some R and Bioconductor packages to run the code. Which you should install are based on the script you want to run. Please see the `library()`s in that script.
+You need to install some `R` and `Bioconductor` packages to run the code. Which you should install are based on the script you want to run. Please see the `library()`s in that script.
 
 I list some necessary packages here:
 
@@ -130,7 +130,7 @@ The browser was developed based on:
 Cautions
 --------
 
-As there are conflicts between tidyverse and Bioconductor packages, you'd better `library()` them in the order:
+As there are conflicts between `tidyverse` and `Bioconductor` packages, you'd better `library()` them in the order:
 
 ``` r
 library(tidyverse)
@@ -142,7 +142,7 @@ Otherwise, some Bioconductor S4 functions cannot run correctly, such as `interse
 Aknowledgement
 --------------
 
-I have learned R and Bioconductor a lot from Hadley's book, edX and Coursera. If you want to write fluent R code to handle squencing data, I recommend the following resources:
+I have learned `R` and `Bioconductor` a lot from Hadley's book, edX and Coursera. If you want to write fluent R code to handle squencing data, I recommend the following resources:
 
 -   R
 
