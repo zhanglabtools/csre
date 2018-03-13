@@ -95,7 +95,7 @@ phtChr <-
                                     TYPE = typeColors),
            color = color,
            fontsize = 6)$gtable
-png(file.path(dirFigureCsre, "figS3_chr.png"),
+png(file.path(dirFigureCsre, "figS4_chr.png"),
     width = 12, height = 6, units = "in",
     res = 1200)
 grid::grid.draw(phtChr)

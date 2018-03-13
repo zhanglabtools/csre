@@ -71,7 +71,7 @@ plotProp <-
         legend.justification = "right",
         plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt")) +
   coord_flip()
-png(file.path(dirFigureCsre, "figS4_proportion.png"),
+png(file.path(dirFigureCsre, "figS5_proportion.png"),
     width = 3.5, height = 10, units = "in",
     res = 1200)
 print(plotProp)
@@ -121,7 +121,7 @@ plotFc <- ggplot(smOvLenToPlot) +
   guides(fill = guide_legend(reverse = TRUE, ncol = 4,
                              title.position = "top")) +
   ylab("Fold Change")
-png(file.path(dirFigureCsre, "figS4_fc_gg.png"),
+png(file.path(dirFigureCsre, "figS5_fc_gg.png"),
     width = 3.5, height = 10, units = "in",
     res = 1200)
 print(plotFc)

@@ -108,7 +108,7 @@ plothk <- ggplot(longEnrichHk) +
         axis.title.y = element_blank()) +
   ylab("Fold Change")
 
-png(file.path(dirFigureCsre, "figS5_hk_new.png"),
+png(file.path(dirFigureCsre, "figS6_hk_new.png"),
     width = 6.6, height = 10, units = "in",
     res = 1200)
 print(plothk)
