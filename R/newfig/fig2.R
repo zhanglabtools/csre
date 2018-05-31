@@ -3,6 +3,7 @@ library(tidyverse)
 library(ggpubr)
 library(ggtree)
 library(GenomicRanges)
+library(RColorBrewer)
 library(pheatmap)
 source("R/functions/getMetadata.R")
 whichData <- "roadmap"
@@ -266,6 +267,128 @@ dev.off()
 #         legend.direction = "horizontal") +
 #   ggtitle("GWAS enrichment of CSREs")
 # print(plotGWAS)
+
+#### figure 2C ----------
+nameSamplesDNase <-
+  c("E003", "E004", "E005", "E006", "E007", "E008",
+    "E017", "E021", "E022", "E028", "E029", "E032",
+    "E033", "E034", "E046", "E050", "E051", "E055",
+    "E056", "E057", "E059", "E080", "E081", "E082",
+    "E083", "E084", "E085", "E086", "E088", "E089",
+    "E090", "E091", "E092", "E093", "E094", "E097",
+    "E098", "E100", "E109", "E114", "E116", "E117",
+    "E118", "E119", "E120", "E121", "E122", "E123",
+    "E124", "E125", "E126", "E127", "E128")
+grlDNaseSpHigh <- readRDS("extData/roadmap/grlDNaseSpHigh.rds")
+source("R/functions/fc.R")
+arDNaseSpHigh <- fcGrlGrl(grl, grlDNaseSpHigh, lenAllChrs)
+rownames(arDNaseSpHigh) <- ref[match(rownames(arDNaseSpHigh), ref$EID), "SHORT_NAME"]
+colnames(arDNaseSpHigh) <- ref[match(colnames(arDNaseSpHigh), ref$EID), "SHORT_NAME"]
+annRow <- ref[match(rownames(arDNaseSpHigh), ref$SHORT_NAME), c("GROUP"), drop = FALSE]
+rownames(annRow) <- rownames(arDNaseSpHigh)
+annCol <- ref[match(colnames(arDNaseSpHigh), ref$SHORT_NAME), c("GROUP"), drop = FALSE]
+rownames(annCol) <- colnames(arDNaseSpHigh)
+id <- ref %>%
+  filter(EID %in% nameSamplesDNase) %>%
+  arrange(SHORT_NAME) %>%
+  `[[`("SHORT_NAME") %>%
+  as.character()
+arDNaseSpHighPart <- arDNaseSpHigh[id, id]
+annRowPart <- annRow[rownames(arDNaseSpHighPart), , drop = FALSE]
+annColPart <- annCol[colnames(arDNaseSpHighPart), , drop = FALSE]
+
+color <- colorRampPalette(rev(brewer.pal(n = 9, name = "Spectral")))(15)
+# color <- c(color, rep(color[length(color)], 40))
+# biCorClust <- function(mat, method = "ward.D2") {
+#   dCol <- as.dist(1 - cor(mat))
+#   hcCol <- hclust(dCol, "ward.D2")
+#   dRow <- as.dist(1 - cor(t(mat)))
+#   hcRow <- hclust(dRow, "ward.D2")
+#   return(list(hcRow = hcRow, hcCol = hcCol))
+# }
+# resCorClust <- biCorClust(arDNaseSpHighPart)
+htArDNaseSpHighPart <-
+  pheatmap(pmin(t(arDNaseSpHighPart), 15),
+           cluster_rows = FALSE,
+           cluster_cols = FALSE,
+           # clustering_distance_rows = "correlation",
+           # clustering_distance_cols = "correlation",
+           # clustering_method = "ward.D2",
+           color = color,
+           annotation_row = annRowPart,
+           annotation_col = annRowPart,
+           annotation_colors = list(GROUP = groupColors),
+           annotation_names_row = FALSE,
+           annotation_names_col = FALSE,
+           cellwidth = 6.4,
+           cellheight = 6.4,
+           treeheight_row = 20,
+           treeheight_col = 24,
+           # border_color = NA,
+           fontsize = 6.4
+  )$gtable
+png(file.path(dirFigureCsre, "fig2_dnase_sp_high_part.png"),
+    width = 9, height = 7, units = "in",
+    res = 600)
+grid::grid.draw(htArDNaseSpHighPart)
+dev.off()
+
+#### figure 2D --------
+resNb <- readRDS(file.path(dirFigureCsre,
+                           paste0("resNb_",
+                                  regionHeight,
+                                  "_",
+                                  regionWidth,
+                                  ".rds")))
+listCluster <- lapply(nameSamples,
+                      function(x) resNb[[x]][["Best.partition"]])
+names(listCluster) <- nameSamples
+dfCluster <- reshape2::melt(listCluster) %>%
+  dplyr::rename(cluster = value, cellType = L1) %>%
+  tidyr::unite(cluster, cellType, cluster)
+
+mcols(gr)$cluster <- dfCluster[, 1]
+
+dfProfZscore <- data.frame(mcols(gr)$profile_zscore,
+                           cluster = mcols(gr)$cluster,
+                           stringsAsFactors = FALSE)
+
+ctProfZscore <- dfProfZscore %>%
+  group_by(cluster) %>%
+  summarise_all(funs(md = median))
+
+
+matCt <- as.matrix(ctProfZscore[, -1])
+rownames(matCt) <- ctProfZscore$cluster
+colnames(matCt) <- sub("_md", "", colnames(matCt))
+binaryMat <- (matCt > 1) * 1
+od <- order(binaryMat[, 1], binaryMat[, 2],
+            binaryMat[, 3], binaryMat[, 4],
+            binaryMat[, 5])
+orderedBinaryMat <- binaryMat[od, ]
+ctOfMatCt <- stringr::str_sub(ctProfZscore$cluster, 1, 4)
+annRow <- ref[match(ctOfMatCt, ref$EID), c("GROUP"), drop = FALSE]
+rownames(annRow) <- rownames(matCt)
+phtBinaryRecluster <-
+  pheatmap(t(orderedBinaryMat),
+           cluster_rows = F,
+           cluster_cols = F,
+           annotation_col = annRow[od, , drop = FALSE],
+           annotation_colors = list(GROUP = groupColors[levels(ref$GROUP)]),
+           # color = c("grey80", "black"),
+           color = colorRampPalette(rev(brewer.pal(n = 9, name = "Spectral")))(2),
+           show_colnames = FALSE,
+           show_rownames = TRUE,
+           annotation_names_col = FALSE,
+           legend = FALSE,
+           annotation_legend = FALSE,
+           fontsize = 8)$gtable
+png(file.path(dirFigureCsre, "fig2_binary_reCluster.png"),
+    width = 6.2, height = 1.2, units = "in",
+    res = 1200,
+    pointsize = 8)
+grid::grid.draw(phtBinaryRecluster)
+dev.off()
 
 #### use original angle
 assignInNamespace(x = "draw_colnames",
