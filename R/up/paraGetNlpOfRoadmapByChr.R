@@ -2,22 +2,24 @@ library(GenomicRanges)
 library(rtracklayer)
 library(rhdf5)
 # seqInfo <- Seqinfo(genome = "hg19")
-seqInfo <- readRDS("data/seqInfoHg19.rds")
 
-nameMarks <- c("H3K4me1", "H3K4me3", "H3K36me3", "H3K27me3", "H3K9me3")
-nameSamples <- paste0("E", sprintf("%03d", seq_len(129)[-c(60, 64)]))
-nameChrs <- paste0("chr", c(1:22, "X"))
 
+# seqInfo <- readRDS("data/seqInfoHg19.rds")
+
+# nameMarks <- c("H3K4me1", "H3K4me3", "H3K36me3", "H3K27me3", "H3K9me3")
+# nameSamples <- paste0("E", sprintf("%03d", seq_len(129)[-c(60, 64)]))
+# nameChrs <- paste0("chr", c(1:22, "X"))
+
+# sizeBin <- 25L
+
+# dirNlp <- "result/roadmap/nlp"
+
+
+getMetadata("roadmap")
 numChrs <- length(nameChrs)
-
-# 25L is used in our paper. If you just want to test the pipeline, I recommend you use 200L or some integer larger.
-sizeBin <- 25L
 sizeChrs <- seqlengths(seqInfo)[nameChrs]
 numBins <- ceiling(sizeChrs / sizeBin)
-
 dirBw <- "E:/Users/cwang/roadmap/bigwig" # change to a dir containing bigwig files of -log10(p-value)
-# dirBw <- "/share_bio/nas5/amsszhangsh_group/wangcan/data/roadmap/bigwig"
-dirNlp <- "result/roadmap/nlp"
 
 chunk <- c(10 ^ 5, 1, 1)
 level <- 0
