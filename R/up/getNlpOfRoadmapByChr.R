@@ -12,6 +12,7 @@ numMarks <- length(nameMarks)
 numSamples <- length(nameSamples)
 numChrs <- length(nameChrs)
 
+# 25L is used in our paper. If you just want to test the pipeline, I recommend you use 200L or some integer larger.
 sizeBin <- 25L
 sizeChrs <- seqlengths(seqInfo)[nameChrs]
 numBins <- ceiling(sizeChrs / sizeBin)
