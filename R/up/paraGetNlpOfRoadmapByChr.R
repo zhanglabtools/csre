@@ -10,13 +10,14 @@ nameChrs <- paste0("chr", c(1:22, "X"))
 
 numChrs <- length(nameChrs)
 
-sizeBin <- 200L
+# 25L is used in our paper. If you just want to test the pipeline, I recommend you use 200L or some integer larger.
+sizeBin <- 25L
 sizeChrs <- seqlengths(seqInfo)[nameChrs]
 numBins <- ceiling(sizeChrs / sizeBin)
 
-dirBw <- "E:/Users/cwang/roadmap/bigwig"
+dirBw <- "E:/Users/cwang/roadmap/bigwig" # change to a dir containing bigwig files of -log10(p-value)
 # dirBw <- "/share_bio/nas5/amsszhangsh_group/wangcan/data/roadmap/bigwig"
-dirNlp <- "result/roadmap_200/nlp"
+dirNlp <- "result/roadmap/nlp"
 
 chunk <- c(10 ^ 5, 1, 1)
 level <- 0
