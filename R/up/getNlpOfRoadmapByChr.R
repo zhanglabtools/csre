@@ -12,13 +12,13 @@ numMarks <- length(nameMarks)
 numSamples <- length(nameSamples)
 numChrs <- length(nameChrs)
 
-sizeBin <- 200L
+sizeBin <- 25L
 sizeChrs <- seqlengths(seqInfo)[nameChrs]
 numBins <- ceiling(sizeChrs / sizeBin)
 
-dirBw <- "E:/Users/cwang/roadmap/bigwig"
+dirBw <- "E:/Users/cwang/roadmap/bigwig" # change to a dir containing bigwig files of -log10(p-value)
 # dirBw <- "/share_bio/nas5/amsszhangsh_group/wangcan/data/roadmap/bigwig"
-dirNlp <- "result/roadmap_200/nlp"
+dirNlp <- "result/roadmap/nlp"
 if (!file.exists(dirNlp)) dir.create(dirNlp, recursive = TRUE)
 
 chunk <- c(10 ^ 5, 1, 1)
